@@ -157,6 +157,9 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
@@ -165,10 +168,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 if not os.path.exists(STATIC_ROOT):
     os.makedirs(STATIC_ROOT)
 
-MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
 
 LOGIN_REDIRECT_URL='/'
 LOGOUT_REDIRECT_URL='/'
 
 AUTH_USER_MODEL = 'accounts.User'
+
+if not DEBUG:  # Ensure media files work in production
+    import mimetypes
+    mimetypes.add_type("image/png", ".png", True)
+    mimetypes.add_type("image/jpeg", ".jpg", True)
+    mimetypes.add_type("image/jpeg", ".jpeg", True)
+    mimetypes.add_type("image/gif", ".gif", True)
