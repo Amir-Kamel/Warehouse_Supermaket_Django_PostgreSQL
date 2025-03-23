@@ -1,0 +1,261 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block header %}
+<title>Create Order</title>
+{% endblock header %}
+
+{% block main_content %}
+<div class="m-5">
+    <h1 class="mb-4 text-primary">Create New Order</h1>
+    <div class="mb-3">
+        <a href="{% url 'orders:order_list' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Order List
+        </a>
+    </div>
+
+    {% if messages %}
+    <div class="messages mb-4">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="form-group mb-4">
+                    <label for="{{ order_form.supermarket.id_for_label }}" class="form-label fw-bold text-primary">Supermarket:</label>
+                    {{ order_form.supermarket }}
+                    {% if order_form.supermarket.errors %}
+                    <div class="text-danger mt-2">
+                        {{ order_form.supermarket.errors }}
+                    </div>
+                    {% endif %}
+                    <small class="form-text text-muted mt-2">
+                        <a href="{% url 'orders:create_supermarket' %}" class="text-decoration-none">
+                            <i class="fas fa-plus-circle me-1 mt-3"></i>Add new supermarket
+                        </a>
+                    </small>
+                </div>
+
+                <h3 class="mt-4 mb-3 text-primary">Order Items</h3>
+                {{ formset.management_form }}
+
+                <div id="order-items" class="mb-3">
+                    {% for form in formset %}
+                    <div class="order-item card mb-3" style="border-left: 4px solid var(--color-medium);">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-5 mb-3">
+                                    <label for="{{ form.product.id_for_label }}" class="form-label fw-bold text-primary">Product:</label>
+                                    {{ form.product }}
+                                    {% if form.product.errors %}
+                                    <div class="text-danger mt-2">
+                                        {{ form.product.errors }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="col-md-5 mb-3">
+                                    <label for="{{ form.quantity.id_for_label }}" class="form-label fw-bold text-primary">Quantity:</label>
+                                    {{ form.quantity }}
+                                    {% if form.quantity.errors %}
+                                    <div class="text-danger mt-2">
+                                        {{ form.quantity.errors }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="col-md-2 d-flex align-items-end mb-3">
+                                    {% if formset.can_delete %}
+                                    <button type="button" class="btn btn-outline-danger delete-row w-100">
+                                        <i class="fas fa-trash-alt me-2"></i>Delete
+                                    </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <button type="button" class="btn  btn-primary add-row mb-4">
+                    <i class="fas fa-plus me-2"></i>Add Item
+                </button>
+
+                <div class="mt-4 d-flex">
+                    <button type="submit" class="btn submit-btn me-2">
+                        <i class="fas fa-check me-2"></i>Create Order
+                    </button>
+                    <a href="{% url 'orders:order_list' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-2"></i>Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    #order_form select,
+    #order_form input,
+    .order-item select,
+    .order-item input {
+        display: block;
+        width: 100%;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #212529;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+    #order_form select:focus,
+    #order_form input:focus,
+    .order-item select:focus,
+    .order-item input:focus {
+        border-color: var(--color-medium);
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(122, 178, 211, 0.25);
+    }
+
+    .add-row {
+        background-color: var(--color-medium);
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 14px;
+        margin: 10px 0;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+    }
+    
+    .add-row:hover {
+        background-color: var(--color-dark);
+    }
+    
+    .submit-btn {
+        background-color: var(--color-dark);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+    }
+    
+    .submit-btn:hover {
+        background-color: var(--color-medium);
+    }
+    
+    .delete-row {
+        transition: all 0.3s;
+    }
+    
+    .order-item {
+        transition: all 0.3s;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const addButton = document.querySelector('.add-row');
+        const orderItemsContainer = document.querySelector('#order-items');
+        const totalForms = document.getElementById('id_form-TOTAL_FORMS') || document.getElementById('id_items-TOTAL_FORMS');
+
+        if (addButton && orderItemsContainer && totalForms) {
+            addButton.addEventListener('click', function() {
+                const formCount = parseInt(totalForms.value);
+                const template = document.querySelector('.order-item');
+                
+                if (!template) {
+                    console.error("No order item template found!");
+                    return;
+                }
+                
+                const newOrderItem = template.cloneNode(true);
+                
+                const inputs = newOrderItem.querySelectorAll('select, input');
+                inputs.forEach(input => {
+                    const name = input.getAttribute('name');
+                    const id = input.getAttribute('id');
+                    
+                    if (name) {
+                        input.setAttribute('name', name.replace(/\d+/, formCount));
+                    }
+                    if (id) {
+                        input.setAttribute('id', id.replace(/\d+/, formCount));
+                    }
+                    
+                    if (input.type !== 'hidden') {
+                        input.value = '';
+                    }
+                });
+                
+                newOrderItem.querySelectorAll('.text-danger').forEach(div => div.remove());
+                
+                const deleteBtn = newOrderItem.querySelector('.delete-row');
+                if (deleteBtn) {
+                    deleteBtn.addEventListener('click', function() {
+                        if (document.querySelectorAll('.order-item').length > 1) {
+                            newOrderItem.remove();
+                            updateFormIndices();
+                        }
+                    });
+                }
+                
+                orderItemsContainer.appendChild(newOrderItem);
+                totalForms.value = formCount + 1;
+            });
+        }
+
+        document.querySelectorAll('.delete-row').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (document.querySelectorAll('.order-item').length > 1) {
+                    this.closest('.order-item').remove();
+                    updateFormIndices();
+                }
+            });
+        });
+
+        function updateFormIndices() {
+            const items = document.querySelectorAll('.order-item');
+            items.forEach((item, index) => {
+                const inputs = item.querySelectorAll('select, input');
+                inputs.forEach(input => {
+                    const name = input.getAttribute('name');
+                    const id = input.getAttribute('id');
+                    
+                    if (name) {
+                        input.setAttribute('name', name.replace(/\d+/, index));
+                    }
+                    if (id) {
+                        input.setAttribute('id', id.replace(/\d+/, index));
+                    }
+                });
+            });
+            
+            if (totalForms) {
+                totalForms.value = items.length;
+            }
+        }
+    });
+</script>
+{% endblock main_content %}

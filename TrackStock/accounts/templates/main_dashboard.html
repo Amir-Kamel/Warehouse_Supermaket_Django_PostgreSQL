@@ -1,0 +1,491 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<title>Dashboard </title>
+<style>
+    :root {
+        --primary: #6571ff;
+        --secondary: #7987a1;
+        --success: #05a34a;
+        --info: #66d1d1;
+        --warning: #fbbc06;
+        --danger: #ff3366;
+        --light: #e9ecef;
+        --dark: #060c17;
+        --background: #f9fafb;
+        --card-bg: #ffffff;
+    }
+    
+    body {
+        background: var(--background);
+        font-family: 'Inter', sans-serif;
+        overflow-x: hidden;
+    }
+
+    .stats-card {
+        background: var(--card-bg);
+        border-radius: 1rem;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        transition: all 0.3s;
+        border: none;
+    }
+
+    .stats-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    }
+
+    .stats-icon {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        font-size: 1.5rem;
+    }
+
+    .chart-container {
+        background: var(--card-bg);
+        border-radius: 1rem;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        padding: 1.5rem;
+        height: 100%;
+    }
+
+    .table-responsive {
+        background: var(--card-bg);
+        border-radius: 1rem;
+        padding: 1.5rem;
+    }
+
+ 
+    .fs-12 { font-size: 12px; }
+    .fs-14 { font-size: 14px; }
+    .fs-16 { font-size: 16px; }
+    .fw-medium { font-weight: 500; }
+    .rounded-xl { border-radius: 1rem; }
+
+  
+    .main-content {
+        padding: 2rem;
+        min-height: 100vh;
+        margin-left: 0; /* Remove sidebar margin */
+    }
+</style>
+{% endblock header %}
+
+{% block main_content %}
+<div  class="m-5">
+    <h2 class="text-primary mb-4">Inventory Dashboard</h2>
+  
+    <div class="row g-4 mb-4">
+        {% if user.is_authenticated and user.role == 'manager' %}
+
+ 
+        <div class="col-sm-6 col-xl-3">
+            <div class="stats-card">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="stats-icon bg-primary-subtle">
+                            <i class="fas fa-users text-primary fa-lg"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h5 class="mb-0">{{total_employees}}</h5>
+                            <span class="text-muted fs-13">Total Employees</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %} 
+        <div class="col-sm-6 col-xl-3">
+            <div class="stats-card">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="stats-icon bg-success-subtle">
+                            <i class="fas fa-box text-success fa-lg"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h5 class="mb-0">{{total_products}}</h5>
+                            <span class="text-muted fs-13">Total Products</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3">
+            <div class="stats-card">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="stats-icon bg-primary-subtle">
+                            <i class="fas fa-store text-primary fa-lg"></i> 
+                        </div>
+                        <div class="ms-3">
+                            <h5 class="mb-0">{{ total_supermarkets }}</h5>
+                            <span class="text-muted fs-13">Total Supermarkets</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-sm-6 col-xl-3">
+            <div class="stats-card">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="stats-icon bg-success-subtle">
+                            <i class="fas fa-truck text-success fa-lg"></i> 
+                        </div>
+                        <div class="ms-3">
+                            <h5 class="mb-0">{{ total_shipments }}</h5>
+                            <span class="text-muted fs-13">Total Shipments</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-sm-6 col-xl-3">
+            <div class="stats-card">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="stats-icon bg-warning-subtle">
+                            <i class="fas fa-shopping-cart text-warning fa-lg"></i> 
+                        </div>
+                        <div class="ms-3">
+                            <h5 class="mb-0">{{ total_orders }}</h5>
+                            <span class="text-muted fs-13">Total Orders</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-sm-6 col-xl-3">
+            <div class="stats-card">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="stats-icon bg-warning-subtle">
+                            <i class="fas fa-tag text-warning fa-lg"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h5 class="mb-0">{{total_categories}}</h5>
+                            <span class="text-muted fs-13">Total Categories</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% if user.is_authenticated and user.role == 'manager' %}
+
+        <div class="col-sm-6 col-xl-3">
+            <div class="stats-card">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="stats-icon bg-danger-subtle">
+                            <i class="fas fa-user-tie text-danger fa-lg"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h5 class="mb-0">{{total_managers}}</h5>
+                            <span class="text-muted fs-13">Total Managers</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+    {% if messages %}
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1050">
+        {% for message in messages %}
+        <div class="toast align-items-center text-white {% if message.tags == 'error' %}bg-danger{% else %}bg-success{% endif %} border-0 show" 
+             role="alert" 
+             aria-live="assertive" 
+             aria-atomic="true"
+             data-bs-delay="3000">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="bi {% if message.tags == 'error' %}bi-x-circle{% else %}bi-check-circle{% endif %} me-2"></i>
+                    {{ message }}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="chart-container">
+            <h6 class="card-title mb-3 text-center">Category Distribution</h6>
+            <canvas id="categoryChart" height="200"></canvas>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="chart-container">
+            <h6 class="card-title mb-3 text-center">Supermarket Distribution</h6>
+            <canvas id="supermarketChart" height="200"></canvas>
+        </div>
+    </div>
+    {% if user.is_authenticated and user.role == 'manager' %}
+
+    <div class="col-md-4">
+        <div class="chart-container">
+            <h6 class="card-title mb-3 text-center">Employee Distribution</h6>
+            <canvas id="employeeChart" height="200"></canvas>
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-md-6">
+        <div class="chart-container">
+            <h6 class="card-title mb-3 text-center">Orders Overview</h6>
+            <canvas id="ordersChart" height="200"></canvas>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="chart-container">
+            <h6 class="card-title mb-3 text-center">Shipments Overview</h6>
+            <canvas id="shipmentsChart" height="200"></canvas>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var categoryData = JSON.parse('{{ category_data|safe }}');
+
+        new Chart(document.getElementById('categoryChart'), {
+            type: 'pie',
+            data: {
+                labels: Object.keys(categoryData),
+                datasets: [{
+                    data: Object.values(categoryData),
+                    backgroundColor: [
+                        '#6571ff', '#05a34a', '#fbbc06', '#ff3366', '#66d1d1'
+                    ]
+                }]
+            }
+        });
+
+        // Supermarket Chart
+        var supermarketData = JSON.parse('{{ supermarket_data|safe }}');
+        new Chart(document.getElementById('supermarketChart'), {
+            type: 'doughnut',
+            data: {
+                labels: supermarketData.labels,
+                datasets: [
+                    {
+                        label: new Date().getFullYear().toString(),
+                        data: supermarketData.current_year,
+                        backgroundColor: ['#6571ff', '#05a34a', '#fbbc06']
+                    },
+                    {
+                        label: (new Date().getFullYear() - 1).toString(),
+                        data: supermarketData.previous_year,
+                        backgroundColor: ['#7987a1', '#66d1d1', '#ff3366']
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.dataset.label}: ${context.raw} orders`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Employee Chart
+        var employeeData = JSON.parse('{{ employee_data|safe }}');
+        new Chart(document.getElementById('employeeChart'), {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Orders vs Items Handled',
+                    data: employeeData,
+                    backgroundColor: '#05a34a'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: { 
+                        title: { display: true, text: 'Number of Orders' }
+                    },
+                    y: { 
+                        title: { display: true, text: 'Number of Items' }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.raw.label}: (Orders: ${context.raw.x}, Items: ${context.raw.y})`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Orders Chart as grouped columns
+        var ordersData = JSON.parse('{{ orders_data|safe }}');
+        new Chart(document.getElementById('ordersChart'), {
+            type: 'bar',
+            data: {
+                labels: ordersData.labels,
+                datasets: ordersData.datasets.map((dataset, index) => ({
+                    label: dataset.label,
+                    data: dataset.data,
+                    backgroundColor: [
+                        'rgba(101, 113, 255, 0.7)',  // blue
+                        'rgba(5, 163, 74, 0.7)',     // green
+                        'rgba(251, 188, 6, 0.7)',    // yellow
+                        'rgba(255, 51, 102, 0.7)',   // red
+                        'rgba(102, 209, 209, 0.7)'   // cyan
+                    ][index % 5],
+                    borderColor: [
+                        '#6571ff',  // blue
+                        '#05a34a',  // green
+                        '#fbbc06',  // yellow
+                        '#ff3366',  // red
+                        '#66d1d1'   // cyan
+                    ][index % 5],
+                    borderWidth: 2,
+                    borderRadius: 5,
+                    maxBarThickness: 30
+                }))
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 20
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: '#ffffff',
+                        titleColor: '#000000',
+                        bodyColor: '#000000',
+                        borderColor: '#6571ff',
+                        borderWidth: 1,
+                        padding: 10,
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.dataset.label}: ${context.raw} orders`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0,0,0,0.05)'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Number of Orders',
+                            font: { weight: 'bold' }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // Shipments Chart
+        var shipmentsData = JSON.parse('{{ shipments_data|safe }}');
+        new Chart(document.getElementById('shipmentsChart'), {
+            type: 'bar',
+            data: {
+                labels: shipmentsData.labels,
+                datasets: shipmentsData.datasets.map((dataset, index) => ({
+                    label: dataset.label,
+                    data: dataset.data,
+                    backgroundColor: [
+                        'rgba(101, 113, 255, 0.7)',  // blue
+                        'rgba(5, 163, 74, 0.7)',     // green
+                        'rgba(251, 188, 6, 0.7)',    // yellow
+                        'rgba(255, 51, 102, 0.7)',   // red
+                        'rgba(102, 209, 209, 0.7)'   // cyan
+                    ][index % 5],
+                    borderColor: [
+                        '#6571ff',  // blue
+                        '#05a34a',  // green
+                        '#fbbc06',  // yellow
+                        '#ff3366',  // red
+                        '#66d1d1'   // cyan
+                    ][index % 5],
+                    borderWidth: 2,
+                    borderRadius: 5,
+                    maxBarThickness: 30
+                }))
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 20
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: '#ffffff',
+                        titleColor: '#000000',
+                        bodyColor: '#000000',
+                        borderColor: '#6571ff',
+                        borderWidth: 1,
+                        padding: 10,
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.dataset.label}: ${context.raw} items`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0,0,0,0.05)'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Number of Items',
+                            font: { weight: 'bold' }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+    });
+</script>
+
+{% endblock main_content %}
