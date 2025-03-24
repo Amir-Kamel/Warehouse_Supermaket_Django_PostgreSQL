@@ -30,11 +30,7 @@ SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-i7z2nwp&com&awl0g5ol6$it@%
 
 DEBUG = os.getenv("DJANGO_DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = [
-    "localhost",
-    "127.0.0.1",
-    "warehousesupermaketdjangopost-production.up.railway.app",  # Add your Railway domain here
-]
+ALLOWED_HOSTS = ['*']
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 # Application definition
