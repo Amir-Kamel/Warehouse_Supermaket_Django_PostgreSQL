@@ -307,7 +307,7 @@ body {
   margin-right: 15px;
 }
 .card-img-container {
-    height: 200px;
+    height: 400px;
     overflow: hidden;
     display: flex;
     align-items: center;
