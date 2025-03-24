@@ -27,9 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-i7z2nwp&com&awl0g5ol6$it@%s5-*laxpztp)g$6v76y%-won")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-
 DEBUG = os.getenv("DJANGO_DEBUG", "False") == "True"
-
 
 ALLOWED_HOSTS = [
     "localhost",
@@ -168,8 +166,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 if not os.path.exists(STATIC_ROOT):
     os.makedirs(STATIC_ROOT)
-
-
 
 LOGIN_REDIRECT_URL='/'
 LOGOUT_REDIRECT_URL='/'
