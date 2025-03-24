@@ -107,7 +107,6 @@ DATABASES = {
     }
 }
 
-
 # Use Neon database if running in a production environment
 NEON_DATABASE_URL = os.getenv("DATABASE_URL")
 
