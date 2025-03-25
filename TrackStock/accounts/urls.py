@@ -1,7 +1,6 @@
 from django.conf.urls import handler404
 from django.urls import path
-from .views import Custom404View
-from .views import RegisterView, LoginView, LogoutView, ManagerManagementView
+from .views import RegisterView, LoginView, LogoutView, ManagerManagementView, Custom404View
 from django.contrib.auth import views as auth_views
 from . import views
 

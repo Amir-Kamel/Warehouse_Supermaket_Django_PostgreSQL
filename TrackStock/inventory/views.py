@@ -17,13 +17,11 @@ def product_list(request):
             Q(category__name__icontains=search_query)
         )
 
- 
     if category_id:
         if category_id == 'low_stock':
- 
-            products = products.filter(quantity__gt=0, quantity__lte=5)
+            products = [product for product in products if product.get_stock_status() == 'low_stock']
         elif category_id == 'zero_stock':
-            products = products.filter(quantity=0)
+            products = [product for product in products if product.get_stock_status() == 'out_of_stock']
         else:
             try:
                 products = products.filter(category_id=category_id)

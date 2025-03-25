@@ -82,10 +82,12 @@ def create_supermarket(request):
         form = SupermarketForm(request.POST)
         if form.is_valid():
             form.save()
-            if '_addanother' in request.POST:
+            if 'save' in request.POST:
+                return redirect('orders:supermarket_list')
+            if 'addanother' in request.POST:
                 return redirect('orders:create_supermarket')
             else:
-                return redirect('orders:create_order')
+                return redirect('orders:order_list')
     else:
         form = SupermarketForm()
 

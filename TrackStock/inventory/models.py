@@ -8,7 +8,7 @@ class Category(models.Model):
         return self.name
 
 class Product(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
     quantity = models.PositiveIntegerField(default=0)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)  
     critical_level = models.PositiveIntegerField(default=10)
