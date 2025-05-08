@@ -145,6 +145,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://warehousesupermaketdjangopost-production.up.railway.app",
 ]
 
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
